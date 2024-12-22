@@ -34,7 +34,7 @@ class _ForgotPasswordVerifyEmailScreenState extends State<ForgotPasswordVerifyEm
                   const SizedBox(height: 80),
                   Text('Your Email Address', style: textTheme.titleLarge),
                   const SizedBox(height: 4),
-                  Text('A 6 digits of OTP will be sent to your email address. ', style: TextStyle(
+                  Text('A 6 digits of OTP will be sent to your email address ', style: TextStyle(
                     color: Colors.black45,
                     fontWeight: FontWeight.w500
                   )),
