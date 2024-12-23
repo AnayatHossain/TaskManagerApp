@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _mobileTEController,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(hintText: 'Mobile'),
                   ),
                   const SizedBox(height: 8),
