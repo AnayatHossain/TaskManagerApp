@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/task_model.dart';
 
 class TaskItemWidget extends StatelessWidget {
   const TaskItemWidget({
-    super.key,
+    super.key, required TaskModel taskModel,
   });
 
   @override

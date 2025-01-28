@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
-
-import '../widgets/task_item_widget.dart';
-import '../widgets/tm_app_bar.dart';
+import 'package:task_manager/ui/widgets/task_item_widget.dart';
+import 'package:task_manager/ui/widgets/task_status_summary_counter_widget.dart';
+import 'package:task_manager/ui/widgets/tm_app_bar.dart';
 
 class ProgressTaskListScreen extends StatefulWidget {
   const ProgressTaskListScreen({super.key});
@@ -15,10 +15,10 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TMAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ScreenBackground(
+      appBar: const TMAppBar(),
+      body: ScreenBackground(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: _buildTaskListView(),
         ),
       ),
@@ -27,9 +27,10 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
 
   Widget _buildTaskListView() {
     return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return const TaskItemWidget();
-        });
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        // return const TaskItemWidget();
+      },
+    );
   }
 }

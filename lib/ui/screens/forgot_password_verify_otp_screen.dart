@@ -12,23 +12,24 @@ class ForgotPasswordVerifyOtpScreen extends StatefulWidget {
   static const String name = '/forgot-password/verify-otp';
 
   @override
-  State<ForgotPasswordVerifyOtpScreen> createState() => _ForgotPasswordVerifyOtpScreenState();
+  State<ForgotPasswordVerifyOtpScreen> createState() =>
+      _ForgotPasswordVerifyOtpScreenState();
 }
 
-class _ForgotPasswordVerifyOtpScreenState extends State<ForgotPasswordVerifyOtpScreen> {
+class _ForgotPasswordVerifyOtpScreenState
+    extends State<ForgotPasswordVerifyOtpScreen> {
   final TextEditingController _otpTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: ScreenBackground(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24),
             child: Form(
               key: _formKey,
               child: Column(
@@ -37,23 +38,23 @@ class _ForgotPasswordVerifyOtpScreenState extends State<ForgotPasswordVerifyOtpS
                   const SizedBox(height: 80),
                   Text('PIN Verification', style: textTheme.titleLarge),
                   const SizedBox(height: 4),
-                  Text('A 6 digits of OTP has been sent to your email address ', style: TextStyle(
-                    color: Colors.black45,
-                    fontWeight: FontWeight.w500
-                  )),
+                  Text(
+                    'A 6 digits of OTP has been sent to your email address',
+                    style: textTheme.titleSmall,
+                  ),
                   const SizedBox(height: 24),
                   _buildPinCodeTextField(),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, ResetPasswordScreen.name);
                     },
                     child: const Icon(Icons.arrow_circle_right_outlined),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 48),
                   Center(
                     child: _buildSignInSection(),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -65,47 +66,52 @@ class _ForgotPasswordVerifyOtpScreenState extends State<ForgotPasswordVerifyOtpS
 
   Widget _buildPinCodeTextField() {
     return PinCodeTextField(
-                  length: 6,
-                  obscureText: false,
-                  animationType: AnimationType.fade,
-                  keyboardType: TextInputType.number,
-                  pinTheme: PinTheme(
-                    shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(5),
-                    fieldHeight: 50,
-                    fieldWidth: 50,
-                    activeFillColor: Colors.white,
-                    selectedFillColor:  Colors.white,
-                    inactiveFillColor: Colors.white
-                  ),
-                  animationDuration: const Duration(milliseconds: 300),
-                  backgroundColor: Colors.transparent,
-                  enableActiveFill: true,
-                  controller: _otpTEController,
-                  appContext: context,
-                );
+      length: 6,
+      animationType: AnimationType.fade,
+      keyboardType: TextInputType.number,
+      pinTheme: PinTheme(
+        shape: PinCodeFieldShape.box,
+        borderRadius: BorderRadius.circular(5),
+        fieldHeight: 50,
+        fieldWidth: 50,
+        activeFillColor: Colors.white,
+        selectedFillColor: Colors.white,
+        inactiveFillColor: Colors.white,
+      ),
+      animationDuration: const Duration(milliseconds: 300),
+      backgroundColor: Colors.transparent,
+      enableActiveFill: true,
+      controller: _otpTEController,
+      appContext: context,
+    );
   }
 
   Widget _buildSignInSection() {
     return RichText(
       text: TextSpan(
-          text: "Already have an account? ",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          children: [
-            TextSpan(
-                text: 'Sign in',
-                style: TextStyle(
-                    color: AppColors.themeColor, fontWeight: FontWeight.w600),
-                recognizer: TapGestureRecognizer()..onTap = () {
-                  Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (value) => false);
-                })
-          ]),
+        text: "Have an account? ",
+        style:
+        const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
+        children: [
+          TextSpan(
+            text: 'Sign in',
+            style: const TextStyle(
+              color: AppColors.themeColor,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, SignInScreen.name, (value) => false);
+              },
+          )
+        ],
+      ),
     );
   }
+
   @override
   void dispose() {
     _otpTEController.dispose();
     super.dispose();
   }
-
 }

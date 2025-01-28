@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/new_task_list_screen.dart';
 import 'package:task_manager/ui/screens/progress_task_list_screen.dart';
-
-import 'cancelled_task_list_screen.dart';
-import 'completed_task_list_screen.dart';
-import 'new_task_list_screen.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -16,17 +13,17 @@ class MainBottomNavScreen extends StatefulWidget {
 
 class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screen = const [
+  final List<Widget> _screens = const [
     NewTaskListScreen(),
     ProgressTaskListScreen(),
-    CompletedTaskListScreen(),
-    CancelledTaskListScreen(),
+    NewTaskListScreen(),
+    NewTaskListScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screen[_selectedIndex],
+      body: _screens[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (int index) {
