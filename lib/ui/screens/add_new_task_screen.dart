@@ -1,32 +1,65 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'package:task_manager/data/utils/urls.dart';
 import 'package:task_manager/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
-
 import '../../data/services/network_coller.dart';
 
-class AddNewTaskScreen extends StatefulWidget {
+// Controller class for GetX
+class AddNewTaskController extends GetxController {
+  final TextEditingController titleTEController = TextEditingController();
+  final TextEditingController descriptionTEController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  RxBool addNewTaskInProgress = false.obs;
+
+  @override
+  void onClose() {
+    titleTEController.dispose();
+    descriptionTEController.dispose();
+    super.onClose();
+  }
+
+  // Method to create a new task
+  Future<void> createNewTask() async {
+    addNewTaskInProgress.value = true;
+    Map<String, dynamic> requestBody = {
+      "title": titleTEController.text.trim(),
+      "description": descriptionTEController.text.trim(),
+      "status": "New"
+    };
+    final NetworkResponse response = await NetworkCaller.postRequest(
+      url: Urls.createTaskUrl,
+      body: requestBody,
+    );
+    addNewTaskInProgress.value = false;
+
+    if (response.isSuccess) {
+      clearTextFields();
+      showSnackBarMessage(Get.context!, 'New task added!');
+    } else {
+      showSnackBarMessage(Get.context!, response.errorMessage);
+    }
+  }
+
+  void clearTextFields() {
+    titleTEController.clear();
+    descriptionTEController.clear();
+  }
+}
+
+class AddNewTaskScreen extends StatelessWidget {
   const AddNewTaskScreen({super.key});
 
   static const String name = '/add-new-task';
 
   @override
-  State<AddNewTaskScreen> createState() => _AddNewTaskScreenState();
-}
-
-class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
-  final TextEditingController _titleTEController = TextEditingController();
-  final TextEditingController _descriptionTEController =
-  TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _addNewTaskInProgress = false;
-
-  @override
   Widget build(BuildContext context) {
+    final AddNewTaskController controller = Get.put(AddNewTaskController());
     final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: const TMAppBar(),
       body: ScreenBackground(
@@ -34,7 +67,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Form(
-              key: _formKey,
+              key: controller.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -42,7 +75,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   Text('Add New Task', style: textTheme.titleLarge),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _titleTEController,
+                    controller: controller.titleTEController,
                     decoration: const InputDecoration(
                       hintText: 'Title',
                     ),
@@ -55,7 +88,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _descriptionTEController,
+                    controller: controller.descriptionTEController,
                     maxLines: 6,
                     decoration: const InputDecoration(
                       hintText: 'Description',
@@ -68,18 +101,20 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _addNewTaskInProgress == false,
-                    replacement: const CenteredCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _createNewTask();
-                        }
-                      },
-                      child: const Icon(Icons.arrow_circle_right_outlined),
-                    ),
-                  ),
+                  Obx(() {
+                    return Visibility(
+                      visible: !controller.addNewTaskInProgress.value,
+                      replacement: const CenteredCircularProgressIndicator(),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (controller.formKey.currentState!.validate()) {
+                            controller.createNewTask();
+                          }
+                        },
+                        child: const Icon(Icons.arrow_circle_right_outlined),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -87,37 +122,5 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _createNewTask() async {
-    _addNewTaskInProgress = true;
-    setState(() {});
-    Map<String, dynamic> requestBody = {
-      "title": _titleTEController.text.trim(),
-      "description": _descriptionTEController.text.trim(),
-      "status": "New"
-    };
-    final NetworkResponse response = await NetworkCaller.postRequest(
-        url: Urls.createTaskUrl, body: requestBody);
-    _addNewTaskInProgress = false;
-    setState(() {});
-    if (response.isSuccess) {
-      _clearTextFields();
-      showSnackBarMessage(context, 'New task added!');
-    } else {
-      showSnackBarMessage(context, response.errorMessage);
-    }
-  }
-
-  void _clearTextFields() {
-    _titleTEController.clear();
-    _descriptionTEController.clear();
-  }
-
-  @override
-  void dispose() {
-    _titleTEController.dispose();
-    _descriptionTEController.dispose();
-    super.dispose();
   }
 }

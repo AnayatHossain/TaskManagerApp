@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/screens/forgot_password_verify_email_screen.dart';
 import 'package:task_manager/ui/screens/forgot_password_verify_otp_screen.dart';
@@ -13,14 +14,11 @@ import 'package:task_manager/ui/utils/app_colors.dart';
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      navigatorKey: navigatorKey,
       theme: ThemeData(
         colorSchemeSeed: AppColors.themeColor,
         textTheme: const TextTheme(
@@ -57,29 +55,17 @@ class TaskManagerApp extends StatelessWidget {
           ),
         ),
       ),
-      onGenerateRoute: (RouteSettings settings) {
-        late Widget widget;
-        if (settings.name == SplashScreen.name) {
-          widget = const SplashScreen();
-        } else if (settings.name == SignInScreen.name) {
-          widget = const SignInScreen();
-        } else if (settings.name == SignUpScreen.name) {
-          widget = const SignUpScreen();
-        } else if (settings.name == ForgotPasswordVerifyEmailScreen.name) {
-          widget = const ForgotPasswordVerifyEmailScreen();
-        } else if (settings.name == ForgotPasswordVerifyOtpScreen.name) {
-          widget = const ForgotPasswordVerifyOtpScreen();
-        } else if (settings.name == ResetPasswordScreen.name) {
-          widget = const ResetPasswordScreen();
-        } else if (settings.name == MainBottomNavScreen.name) {
-          widget = const MainBottomNavScreen();
-        } else if (settings.name == AddNewTaskScreen.name) {
-          widget = const AddNewTaskScreen();
-        } else if (settings.name == UpdateProfileScreen.name) {
-          widget = const UpdateProfileScreen();
-        }
-        return MaterialPageRoute(builder: (ctx) => widget);
-      },
+      getPages: [
+        GetPage(name: '/', page: () => const SplashScreen()),
+        GetPage(name: '/sign-in', page: () => const SignInScreen()),
+        GetPage(name: '/sign-up', page: () => const SignUpScreen()),
+        GetPage(name: '/forgot-password-email', page: () => const ForgotPasswordVerifyEmailScreen()),
+        GetPage(name: '/forgot-password-otp', page: () => const ForgotPasswordVerifyOtpScreen()),
+        GetPage(name: '/reset-password', page: () => const ResetPasswordScreen()),
+        GetPage(name: '/main', page: () => const MainBottomNavScreen()),
+        GetPage(name: '/add-task', page: () => const AddNewTaskScreen()),
+        GetPage(name: '/update-profile', page: () => const UpdateProfileScreen()),
+      ],
     );
   }
 }
